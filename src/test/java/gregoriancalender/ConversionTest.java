@@ -2,63 +2,112 @@ package gregoriancalender;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.junit.Before;
 import org.junit.Test;
-
 
 public class ConversionTest {
 
-	@Before
-	public void beforeRunTheTest() {
-
-	}
-
 	@Test
 	public void testConversionToDateFromCalender() {
-		Calendar calender = Calendar.getInstance();
-		Conversion conversion = new Conversion();
-		Date date = new Date();
-		Date testDate = new Date();
-		date = conversion.conversionToDateFromCalender(calender);
-	//	assertTrue(new Date().equals(new Conversion().conversionToDateFromCalender(calender)));
-		assertEquals(testDate.toString() , date.toString());
-		assertNotNull(date);
-		//assertSame(new Date(), date);
-		//assertTrue(testDate.equals(date));
-
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+		
+		assertEquals( formatter.format(new Date()), formatter.format(Conversion.conversionToDateFromCalender(Calendar.getInstance())));
+		assertNotNull(Conversion.conversionToDateFromCalender(Calendar.getInstance()));
+	
 	}
 
 	@Test
 	public void testConversionToLocalDateFromDate() {
-
-		assertEquals(LocalDate.now(), new Conversion().conversionToLocalDateFromDate(new Date()));
-		//assertNotEquals("16-01-2019", new Conversion().conversionToLocalDateFromDate(new Date()).toString());
-
+		assertEquals(LocalDate.now(), Conversion.conversionToLocalDateFromDate(new Date()));
 	}
 
 	@Test
 	public void testConversionToLocalDateFromCalender() {
-		assertEquals(LocalDate.now(), new Conversion().conversionToLocalDateFromCalender(Calendar.getInstance()));
+		
+		assertEquals(LocalDate.now(), Conversion.conversionToLocalDateFromCalender(Calendar.getInstance()));
+		
 	}
 
 	@Test
 	public void testConversionToDateFromLocalDate() {
-//		System.out.println(new Conversion().conversionToDateFromLocalDate(LocalDate.now()).toString());
-//		System.out.println(new Date().toString());
-		assertEquals(new Date().toString(), new Conversion().conversionToDateFromLocalDate(LocalDate.now()).toString());
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+		
+		assertEquals(formatter.format(new Date()), formatter.format(Conversion.conversionToDateFromLocalDate(LocalDate.now())));
 	}
 
 	@Test
 	public void testConversionToStringFromDate() {
 		
+		assertEquals("2019/01/17" , Conversion.conversionToStringFromDate(new Date()));
 		
-	   // String strDate = formatter.format(date);  
-		System.out.println(new Conversion().conversionToStringFromDate(new Date()));
-		assertEquals("01/16/2019" , new Conversion().conversionToStringFromDate(new Date()));
+	}
+
+	@Test
+	public void testConversionToDateFromString() throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+		assertEquals(formatter.format(new Date()), formatter.format(Conversion.conversionToDateFromString("2019/01/17")));
+	}
+
+	@Test
+	public void testConversionToLocalDateFromString() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/d");
+		//default, ISO_LOCAL_DATE
+		LocalDate localDate = LocalDate.parse("2019/01/17" , formatter);
+		assertEquals(localDate, Conversion.conversionToLocalDateFromString("2019/01/17"));
+	
+	}
+
+	@Test
+	public void testConversionToStringFromLocalDate() {
+		assertEquals("2019/01/17", Conversion.conversionToStringFromLocalDate(LocalDate.now()));
+	
+	}
+
+	@Test
+	public void testConversionToLocalDateFromOffsetDate() {
+		DateTimeFormatter fmt = new DateTimeFormatterBuilder()
+			    .append(DateTimeFormatter.ISO_OFFSET_DATE)
+			    .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+			    .toFormatter();
+		assertEquals(LocalDate.now(), Conversion.conversionToLocalDateFromOffsetDate(OffsetDateTime.parse("2019-01-17-05:00", fmt)));
+	}
+	
+	@Test
+	public void testconversionToLocalDateTimeFromDate() {
+		
+		LocalDateTime localDateTime=Conversion.conversionToLocalDateTimeFromDate(new Date().from(Instant.now()));
+		LocalDateTime expectedLocalDateTime=LocalDateTime.now();
+		
+		assertEquals(expectedLocalDateTime.now().getYear(),localDateTime.now().getYear());
+		assertEquals(expectedLocalDateTime.now().getDayOfMonth(),localDateTime.now().getDayOfMonth());
+		assertEquals(expectedLocalDateTime.now().getDayOfWeek(),localDateTime.now().getDayOfWeek());
+		
+	}
+	
+	@Test
+	public void testconversionToDateFromLocalDateTime() {
+		Date date=Conversion.asDate(LocalDateTime.now());
+		Date dateExpected =new Date();
+		
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a");  
+		String formattedDate = formatter.format(date);
+		String formatedDateExpected=formatter.format(dateExpected);
+		
+		assertEquals(formatedDateExpected, formattedDate);
+		
 	}
 
 }
