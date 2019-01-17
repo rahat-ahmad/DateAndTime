@@ -93,30 +93,5 @@ public class Conversion {
 		  return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
 	  }
 	
-	
-	
-	public static void main(String[] args) throws ParseException {
-		
-		DateTimeFormatter fmt = new DateTimeFormatterBuilder()
-			    .append(DateTimeFormatter.ISO_OFFSET_DATE)
-			    .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-			    .toFormatter();
-
-		
-		Calendar calender = GregorianCalendar.getInstance();
-		Conversion conversion = new Conversion();
-		System.out.println(conversion.conversionToDateFromCalender(calender));
-		System.out.println(conversion.conversionToLocalDateFromCalender(calender));
-		System.out.println(conversion.conversionToDateFromLocalDate(LocalDate.now()));
-		System.out.println(conversion.conversionToLocalDateFromDate(new Date()));
-		System.out.println(conversion.conversionToStringFromDate(new Date()));
-		System.out.println(conversion.conversionToDateFromString("2019/01/17"));
-		System.out.println(conversion.conversionToLocalDateFromString("2019/01/7"));
-		System.out.println(conversion.conversionToStringFromLocalDate(LocalDate.now()));
-		System.out.println(conversion.conversionToLocalDateFromOffsetDate(OffsetDateTime.parse("2015-01-15-05:00",fmt)));
-		
-	}
-	
-	
 
 }
